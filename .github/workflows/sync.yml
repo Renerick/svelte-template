@@ -1,0 +1,46 @@
+name: Update from upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  update_from_upstream:
+    runs-on: ubuntu-20.04
+    name: Sync tailwindcss branch with latest master from upstream
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Pull upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v2.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_repository: sveltejs/template
+          upstream_branch: master
+          target_branch: master
+      - name: Dump step context
+        env:
+          JOB_CONTEXT: ${{ toJson(steps.sync) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Create pull request
+        if: ${{ steps.sync.outputs.has_new_commits=='true' }}
+        uses: thomaseizinger/create-pull-request@1.0.0
+        with:
+          # A GitHub API token
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          # The head ref that should be pulled into base.
+          head: master
+          # The title of the pull request.
+          title: "Update `tailwindcss` from `master`"
+          # The base branch for the pull request. Defaults to master.
+          base: tailwindcss
+          # Whether this should be a draft PR.
+          draft: false
+          # The body of the pull request.
+          body: "Update `tailwindcss` from `master` after sync with upstream"
