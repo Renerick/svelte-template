@@ -1,11 +1,8 @@
+const colors = require('tailwindcss/colors')
+
 const production = !process.env.ROLLUP_WATCH;
 
 module.exports = {
-  // see https://tailwindcss.com/docs/upcoming-changes
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
   purge: {
     enabled: production,
     content: [
@@ -16,7 +13,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        svelte: "#ff3e00"
+        svelte: "#ff3e00",
+        tailwind: colors.cyan['500']
       }
     },
   },
