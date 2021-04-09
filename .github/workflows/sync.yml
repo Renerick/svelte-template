@@ -33,7 +33,7 @@ jobs:
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           # A GitHub API token
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # The head ref that should be pulled into base.
           head: master
           # The title of the pull request.
